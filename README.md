@@ -1,44 +1,41 @@
-# Trabalho 2 — DevOps: AgendaFácil
+# AgendaFácil — Projeto DevOps
 
-## Produto
-MVP web de agenda para cadastrar compromissos, consultar atendimentos por data, buscar por pessoa/serviço e acompanhar status. O sistema tem frontend, API Express e persistência SQLite.
+MVP web de agenda com interface, API Node.js/Express e banco SQLite.
+
+## Arquitetura
+- Frontend em public/ (HTML, CSS e JavaScript).
+- Backend Express e regras da aplicação em src/app.js.
+- Banco SQLite via better-sqlite3; padrão local: data/agenda-facil.sqlite.
+- Inicialização e encerramento do servidor em src/server.js.
 
 ## Executar localmente
 Requer Node.js 20 ou superior.
 
-```sh
-npm install
-npm start
-```
+    npm install
+    npm start
 
-Abra `http://localhost:3000`. O banco é criado em `data/agenda-facil.sqlite`. Para executar os testes de API: `npm test`. A checagem de sintaxe está disponível com `npm run check`.
+Acesse http://localhost:3000. Para as verificações do CI, execute npm run check e npm test. PORT e DB_FILE são configuráveis por ambiente; .env.example contém apenas valores de referência.
 
-## Funcionalidades e API
-- `POST /api/appointments`: criar compromisso (pessoa, serviço e data/horário obrigatórios).
-- `GET /api/appointments`: listar; aceita filtros `search`, `status` e `date`.
-- `PATCH /api/appointments/:id`: editar compromisso ou atualizar o status.
-- `DELETE /api/appointments/:id`: excluir compromisso.
-- `GET /api/summary`: totais da agenda e compromissos de hoje.
-- `GET /health`: estado do serviço e horário da verificação.
+## Recursos
+- Cadastrar, consultar, editar, atualizar status e excluir compromissos.
+- Buscar por pessoa, serviço, observações, status e data.
+- Consultar resumo diário e totais por status.
+- Verificar disponibilidade em /health.
 
-Os status são Agendado, Confirmado, Concluído e Cancelado. `src/app.js` contém API, validações e acesso ao SQLite; `public/` contém o frontend responsivo; `src/server.js` inicia e encerra o serviço.
+## Versionamento e CI
+O código está hospedado em https://github.com/VitokaVTK/AgendaFacil. O workflow .github/workflows/ci.yml roda em push e Pull Request para main e master. Ele prepara Node.js 20, instala dependências, verifica a sintaxe e executa testes automatizados.
 
-## Git e pipeline DevOps
-O projeto está versionado em Git local. Para a entrega, hospedar o código no GitHub e usar branches curtas `feature/nome`, commits pequenos e Pull Requests para a branch principal (`main` ou `master`). Os workflows aceitam os dois nomes.
+Os testes usam node:test, Supertest e SQLite em memória. Cobrem health check, campos obrigatórios, cadastro/listagem/edição/exclusão e resposta 404 para um compromisso inexistente.
 
-- **CI:** `.github/workflows/ci.yml` roda em push e Pull Request para `main` ou `master`, instala dependências, verifica sintaxe e executa testes automatizados.
-- **CD:** `.github/workflows/deploy.yml` publica no Railway após o CI bem-sucedido na branch principal. O workflow usa `RAILWAY_TOKEN`, `RAILWAY_SERVICE_ID` e `RAILWAY_ENVIRONMENT_ID` protegidos nas configurações do repositório.
-- **Verificação da publicação:** `railway.json` configura a rota `/health` como health check.
-- **Persistência hospedada:** em produção, configurar volume Railway e `DB_FILE` para manter o SQLite após reinicializações.
+## CD e publicação
+O serviço Render está conectado ao repositório e à branch main. O auto deploy está configurado para ocorrer depois que os checks de CI passam. O processo inicia com npm start, usa PORT e verifica a disponibilidade por /health.
 
-O deploy está preparado e passa a rodar depois de publicar o repositório e configurar as credenciais Railway. Não grave tokens no código. Docker e Terraform foram omitidos porque infraestrutura como código é opcional na atividade.
+Aplicação: https://agendafacil-m8h2.onrender.com/
 
-## Testes e monitoramento
-`test/app.test.js` cobre health check, validação de campos, cadastro, listagem, atualização de status, exclusão e compromisso inexistente. O endpoint `/health` e os logs JSON de inicialização, cadastro, edição e erro dão visibilidade operacional; no Railway, consulte o painel de logs.
+## Provisionamento e monitoramento
+O serviço web foi provisionado no painel do Render, que gerencia a instância e a publicação. Infraestrutura como código foi omitida porque Docker/Compose ou Terraform são opcionais na atividade.
 
-## Processo Scrum
-O trabalho Scrum correspondente está separado em `../01-trabalho-scrum`, com produto, blueprint de referência, fluxo Kanban, backlog priorizado de 15 itens e três user stories.
+O endpoint /health retorna o estado do serviço. O backend emite logs JSON de inicialização, criação, edição, exclusão e erros de requisição; logs e métricas básicos estão disponíveis no painel do Render.
 
-## Limites do MVP
-Sem contas de usuário, notificações ou integração com calendários externos. A agenda é uma base acadêmica simples. A publicação externa exige conta e credenciais do estudante.
-
+## Persistência e limites
+O SQLite local é armazenado em data/agenda-facil.sqlite. Sem disco persistente no Render, o arquivo SQLite pode ser perdido quando a instância hospedada for substituída ou reiniciada. O MVP não inclui autenticação, notificações nem integrações externas.
