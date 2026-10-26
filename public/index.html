@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173d32"><title>AgendaFácil | Compromissos</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div class="brand"><span class="brand-mark">A</span><span>AGENDA<b>FÁCIL</b></span></div>
+      <p class="eyebrow">AGENDA DE ATENDIMENTOS</p>
+      <h1>Seu dia, organizado<br>em um só lugar</h1>
+      <p class="intro">Cadastre compromissos, acompanhe confirmações e consulte sua agenda com facilidade.</p>
+    </header>
+
+    <section class="summary" aria-label="Resumo da agenda">
+      <div class="summary-heading"><div><p class="eyebrow">VISÃO GERAL</p><h2>Agenda</h2></div><span id="health" class="health">Verificando sistema…</span></div>
+      <div id="stats" class="stats"></div>
+    </section>
+
+    <section class="workspace">
+      <form id="form" class="panel form-panel">
+        <div class="section-title"><span class="step">01</span><div><p class="eyebrow">NOVO COMPROMISSO</p><h2>Adicionar à agenda</h2></div></div>
+        <label>Nome da pessoa<input id="client" name="client" maxlength="100" placeholder="Ex.: Ana Oliveira" required></label>
+        <label>Serviço ou compromisso<input id="service" name="service" maxlength="100" placeholder="Ex.: consultoria inicial" required></label>
+        <label>Data e horário<input id="scheduledAt" name="scheduledAt" type="datetime-local" required></label>
+        <label>Observações<textarea id="notes" name="notes" maxlength="1000" rows="3" placeholder="Informações úteis (opcional)"></textarea></label>
+        <button class="primary" type="submit">Salvar compromisso <span aria-hidden="true">→</span></button>
+        <p id="notice" role="status" class="notice"></p>
+      </form>
+
+      <section class="panel appointments-panel">
+        <div class="section-title"><span class="step">02</span><div><p class="eyebrow">ACOMPANHAMENTO</p><h2>Próximos compromissos</h2></div></div>
+        <div class="filters"><label class="search"><span class="sr-only">Buscar compromisso</span><input id="search" type="search" placeholder="Buscar pessoa ou serviço"></label><label class="filter"><span class="sr-only">Filtrar status</span><select id="statusFilter"><option value="">Todos os status</option><option>Agendado</option><option>Confirmado</option><option>Concluído</option><option>Cancelado</option></select></label></div>
+        <div class="date-filter"><label for="dateFilter">Dia</label><input id="dateFilter" type="date"><button id="clearDate" type="button">Limpar data</button></div>
+        <div id="appointments" class="appointment-list" aria-live="polite"></div>
+      </section>
+    </section>
+    <footer>AgendaFácil · MVP acadêmico · <span>Compromissos claros, rotina tranquila</span></footer>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
